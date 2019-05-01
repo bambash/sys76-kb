@@ -28,7 +28,7 @@ func GetColorInHex(c RGBColor) string {
 }
 
 func FileHandler(c string) bool {
-	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/color_left", os.O_RDWR|os.O_CREATE, 0755)
+	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/color_left", os.O_RDWR, 0755)
 	defer f.Close()
 
 	if err != nil {
