@@ -27,28 +27,54 @@ func GetColorInHex(c RGBColor) string {
 	return hex
 }
 
-func FileHandler(c string) bool {
+// ColorFileHandler writes a hex value to color_left, and returns the bytes written
+func ColorFileHandler(c string) int {
 	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/color_left", os.O_RDWR, 0755)
 	defer f.Close()
 
 	if err != nil {
 		log.Fatal(err)
-		return false
+		return 0
 	}
 
 	l, err := f.WriteString(c)
 	if err != nil {
 		log.Fatal(err)
 		f.Close()
-		return false
+		return 0
 	}
-	fmt.Println(l, "bytes written successfully")
+
 	err = f.Close()
 	if err != nil {
 		log.Fatal(err)
-		return false
+		return 0
 	}
-	return true
+	return l
+}
+
+// BrightnessFileHandler writes a hex value to brightness, and returns the bytes written
+func BrightnessFileHandler(c string) int {
+	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/brightness", os.O_RDWR, 0755)
+	defer f.Close()
+
+	if err != nil {
+		log.Fatal(err)
+		return 0
+	}
+
+	l, err := f.WriteString(c)
+	if err != nil {
+		log.Fatal(err)
+		f.Close()
+		return 0
+	}
+
+	err = f.Close()
+	if err != nil {
+		log.Fatal(err)
+		return 0
+	}
+	return l
 }
 
 func main() {
@@ -57,44 +83,38 @@ func main() {
 	for {
 		for i := 0; i <= 255; i++ {
 			c := RGBColor{255, i, 0}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 
 		for i := 255; i >= 0; i-- {
 			c := RGBColor{i, 255, 0}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 
 		for i := 0; i <= 255; i++ {
 			c := RGBColor{0, 255, i}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 
 		for i := 255; i >= 0; i-- {
 			c := RGBColor{0, i, 255}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 
 		for i := 0; i <= 255; i++ {
 			c := RGBColor{i, 0, 255}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 
 		for i := 255; i >= 0; i-- {
 			c := RGBColor{255, 0, i}
-			fmt.Println(GetColorInHex(c))
 			hex := GetColorInHex(c)
-			FileHandler(hex)
+			ColorFileHandler(hex)
 		}
 	}
 }
