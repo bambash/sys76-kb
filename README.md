@@ -3,6 +3,11 @@ This is app is still a work-in-progress. The goal is to create a robust CLI tool
 
 Currently, it will only rotate the keyboard backlight through a RGB rainbow. Only tested on the Darter, but it should work on other System76 models.
 
+It currently only runs a "rainbow" loop: 
+![alt text][loop]
+
+[loop]: https://github.com/bambash/sys76-kb/blob/master/kb.gif "loop"
+
 ### future plans
 - robust cli functionality
 - brightness control
