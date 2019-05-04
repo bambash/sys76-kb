@@ -133,7 +133,7 @@ func InfiniteRainbow() {
 	for {
 		for _, c := range colors {
 			for _, f := range kbfiles {
-				f.WriteString(c)
+				go f.WriteString(c)
 				time.Sleep(time.Millisecond)
 			}
 		}
