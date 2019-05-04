@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 type RGBColor struct {
@@ -27,35 +28,30 @@ func GetColorInHex(c RGBColor) string {
 	return hex
 }
 
-// ColorFileHandler writes a hex value to color_left, and returns the bytes written
-func ColorFileHandler(c string) int {
-	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/color_left", os.O_RDWR, 0755)
-	defer f.Close()
+// WriteColorFile writes a hex value to "f" input, and returns the bytes written
+func WriteColorFile(c string, f string) int {
+	path := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", f)
+	kbfile, err := os.OpenFile(path, os.O_RDWR, 0755)
 
 	if err != nil {
 		log.Fatal(err)
-		return 0
 	}
 
-	l, err := f.WriteString(c)
+	l, err := kbfile.WriteString(c)
 	if err != nil {
 		log.Fatal(err)
-		f.Close()
-		return 0
 	}
 
-	err = f.Close()
 	if err != nil {
 		log.Fatal(err)
-		return 0
 	}
+	kbfile.Close()
 	return l
 }
 
 // BrightnessFileHandler writes a hex value to brightness, and returns the bytes written
 func BrightnessFileHandler(c string) int {
 	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/brightness", os.O_RDWR, 0755)
-	defer f.Close()
 
 	if err != nil {
 		log.Fatal(err)
@@ -79,43 +75,67 @@ func BrightnessFileHandler(c string) int {
 
 // InfiniteRainbow generates... an infinite rainbow
 func InfiniteRainbow() {
+	files := []string{"color_center", "color_left", "color_right", "color_extra"}
 
-	// infinite rainbow
+	open := func(files []string) []*os.File {
+		kbfiles := make([]*os.File, 0, len(files))
+		for _, file := range files {
+			p := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", file)
+			fh, err := os.OpenFile(p, os.O_RDWR, 0755)
+			if err != nil {
+				log.Fatal("error: %v", err)
+				continue
+			}
+			kbfiles = append(kbfiles, fh)
+		}
+		return kbfiles
+	}
+
+	colors := make([]string, 0, 6)
+	// generate range of rainbow values
+	for i := 0; i <= 255; i++ {
+		c := RGBColor{255, i, 0}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	for i := 255; i >= 0; i-- {
+		c := RGBColor{i, 255, 0}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	for i := 0; i <= 255; i++ {
+		c := RGBColor{0, 255, i}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	for i := 255; i >= 0; i-- {
+		c := RGBColor{0, i, 255}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	for i := 0; i <= 255; i++ {
+		c := RGBColor{i, 0, 255}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	for i := 255; i >= 0; i-- {
+		c := RGBColor{255, 0, i}
+		hex := GetColorInHex(c)
+		colors = append(colors, hex)
+	}
+
+	kbfiles := open(files)
 	for {
-		for i := 0; i <= 255; i++ {
-			c := RGBColor{255, i, 0}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
-		}
-
-		for i := 255; i >= 0; i-- {
-			c := RGBColor{i, 255, 0}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
-		}
-
-		for i := 0; i <= 255; i++ {
-			c := RGBColor{0, 255, i}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
-		}
-
-		for i := 255; i >= 0; i-- {
-			c := RGBColor{0, i, 255}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
-		}
-
-		for i := 0; i <= 255; i++ {
-			c := RGBColor{i, 0, 255}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
-		}
-
-		for i := 255; i >= 0; i-- {
-			c := RGBColor{255, 0, i}
-			hex := GetColorInHex(c)
-			ColorFileHandler(hex)
+		for _, c := range colors {
+			for _, f := range kbfiles {
+				f.WriteString(c)
+				time.Sleep(time.Millisecond)
+			}
 		}
 	}
 }
