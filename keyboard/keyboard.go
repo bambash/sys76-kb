@@ -23,7 +23,7 @@ func getHex(num int) string {
 }
 
 // GetColorInHex returns a color in HEX format
-func GetColorInHex(c RGBColor) string {
+func (c RGBColor) GetColorInHex() string {
 	hex := getHex(c.Red) + getHex(c.Green) + getHex(c.Blue)
 	return hex
 }
@@ -95,37 +95,37 @@ func InfiniteRainbow() {
 	// generate range of rainbow values
 	for i := 0; i <= 255; i++ {
 		c := RGBColor{255, i, 0}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
 	for i := 255; i >= 0; i-- {
 		c := RGBColor{i, 255, 0}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
 	for i := 0; i <= 255; i++ {
 		c := RGBColor{0, 255, i}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
 	for i := 255; i >= 0; i-- {
 		c := RGBColor{0, i, 255}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
 	for i := 0; i <= 255; i++ {
 		c := RGBColor{i, 0, 255}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
 	for i := 255; i >= 0; i-- {
 		c := RGBColor{255, 0, i}
-		hex := GetColorInHex(c)
+		hex := c.GetColorInHex()
 		colors = append(colors, hex)
 	}
 
