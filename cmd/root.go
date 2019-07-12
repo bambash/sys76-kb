@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"../keyboard"
+	"github.com/bambash/keyboard/keyboard"
 	"github.com/spf13/cobra"
 )
 
