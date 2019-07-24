@@ -11,8 +11,8 @@ var rootCmd = &cobra.Command{
 	Use:   "sys76-kb",
 	Short: "sys76-kb is a keyboard controller for System76 laptops",
 	Long: `A simple keyboard contoller built with
-				  love by bambash in Go.
-				  Complete documentation is available at https://github.com/bambash/sys76-kb`,
+		   love by bambash in Go.
+		   Complete documentation is available at https://github.com/bambash/sys76-kb`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 		if err := cmd.ParseFlags(args); err != nil {

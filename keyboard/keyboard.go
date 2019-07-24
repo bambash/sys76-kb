@@ -7,11 +7,25 @@ import (
 	"time"
 )
 
+// RGBColor represents Red Green and Blue values of a color
 type RGBColor struct {
 	Red   int
 	Green int
 	Blue  int
 }
+
+var presetColors = map[string]RGBColor{
+	"red":    RGBColor{255, 0, 0},
+	"orange": RGBColor{255, 128, 0},
+	"yellow": RGBColor{255, 255, 0},
+	"green":  RGBColor{0, 255, 0},
+	"aqua":   RGBColor{255, 255, 0},
+	"blue":   RGBColor{0, 0, 255},
+	"pink":   RGBColor{255, 105, 180},
+	"purple": RGBColor{128, 0, 128},
+}
+
+var colorFiles = []string{"color_center", "color_left", "color_right", "color_extra"}
 
 // GetHex Converts a decimal number to hex representations
 func getHex(num int) string {
@@ -28,25 +42,25 @@ func (c RGBColor) GetColorInHex() string {
 	return hex
 }
 
-// WriteColorFile writes a hex value to "f" input, and returns the bytes written
-func WriteColorFile(c string, f string) int {
-	path := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", f)
-	kbfile, err := os.OpenFile(path, os.O_RDWR, 0755)
-
-	if err != nil {
-		log.Fatal(err)
+// ColorFileHandler writes a hex value to "f" input, and returns the bytes written
+func ColorFileHandler(c string) {
+	_, exists := presetColors[c]
+	if exists {
+		c := presetColors[c]
+		color := c.GetColorInHex()
+		for _, file := range colorFiles {
+			p := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", file)
+			fh, err := os.OpenFile(p, os.O_RDWR, 0755)
+			if err != nil {
+				log.Fatal("error: %v", err)
+				os.Exit(1)
+			}
+			go fh.WriteString(color)
+			go fh.Close()
+		}
+	} else {
+		os.Exit(1)
 	}
-
-	l, err := kbfile.WriteString(c)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	kbfile.Close()
-	return l
 }
 
 // BrightnessFileHandler writes a hex value to brightness, and returns the bytes written
@@ -75,8 +89,6 @@ func BrightnessFileHandler(c string) int {
 
 // InfiniteRainbow generates... an infinite rainbow
 func InfiniteRainbow() {
-	files := []string{"color_center", "color_left", "color_right", "color_extra"}
-
 	open := func(files []string) []*os.File {
 		kbfiles := make([]*os.File, 0, len(files))
 		for _, file := range files {
@@ -129,7 +141,7 @@ func InfiniteRainbow() {
 		colors = append(colors, hex)
 	}
 
-	kbfiles := open(files)
+	kbfiles := open(colorFiles)
 	for {
 		for _, c := range colors {
 			for _, f := range kbfiles {
