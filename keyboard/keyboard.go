@@ -19,7 +19,7 @@ var presetColors = map[string]RGBColor{
 	"orange": RGBColor{255, 128, 0},
 	"yellow": RGBColor{255, 255, 0},
 	"green":  RGBColor{0, 255, 0},
-	"aqua":   RGBColor{255, 255, 0},
+	"aqua":   RGBColor{25, 255, 223},
 	"blue":   RGBColor{0, 0, 255},
 	"pink":   RGBColor{255, 105, 180},
 	"purple": RGBColor{128, 0, 128},
@@ -55,8 +55,8 @@ func ColorFileHandler(c string) {
 				log.Fatal("error: %v", err)
 				os.Exit(1)
 			}
-			go fh.WriteString(color)
-			go fh.Close()
+			fh.WriteString(color)
+			fh.Close()
 		}
 	} else {
 		os.Exit(1)
