@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// BrightnessPulse continuously dials up and down brightness
 func BrightnessPulse() {
 	f, err := os.OpenFile("/sys/class/leds/system76::kbd_backlight/brightness", os.O_RDWR, 0755)
 	defer f.Close()
@@ -16,13 +17,11 @@ func BrightnessPulse() {
 	}
 	for {
 		for i := 255; i >= 0; i-- {
-			fmt.Println(i)
 			s := string(i)
 			f.WriteString(s)
 			time.Sleep(100 * time.Millisecond)
 		}
 		for i := 0; i <= 255; i++ {
-			fmt.Println(i)
 			s := string(i)
 			f.WriteString(s)
 			time.Sleep(100 * time.Millisecond)

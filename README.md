@@ -10,11 +10,21 @@ Requires sudo privs to modify the backlight files in `/sys/class/leds/system76`
 ## help menu
 $ sudo sys76-kb
 
-## run a infinite rainbow in the background
-$ sudo sys76-kb run &
+## set color to red
+$ sudo sys76-kb set -c red
 
-## set brightness (use 0 - 255)
-$ sudo sys76-kb brightness -l 100
+## set brightness
+$ sudo sys76-kb set -b 255
+
+## set color and brightness
+$ sudo sys76-kb set -c pink -b 127
+
+## run a infinite rainbow in the background
+$ sudo sys76-kb run -p rainbow &
+
+## run a infinite pulse in the background
+$ sudo sys76-kb run -p pulse &
+
 ```
 
 ![alt text][loop]
