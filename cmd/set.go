@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/bambash/sys76-kb/keyboard"
+	keyboard "github.com/bambash/sys76-kb/pkg"
 	"github.com/spf13/cobra"
 )
 

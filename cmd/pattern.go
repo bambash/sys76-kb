@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/bambash/sys76-kb/keyboard"
+	keyboard "github.com/bambash/sys76-kb/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -12,15 +12,25 @@ var Pattern string
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-	runCmd.Flags().StringVarP(&Pattern, "pattern", "p", "rainbow", "the pattern to run (only rainbow for now)")
+	runCmd.Flags().StringVarP(&Pattern, "pattern", "p", "", "the pattern to run ")
 }
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "runs a color pattern",
-	Long:  `runs a collor pattern that the backlight loops through. (only rainbow currently)`,
+	Short: "runs a backlight pattern",
+	Long:  `runs a pattern that the backlight loops through. 'rainbow' or 'pulse'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("running infinite rainbow %v\n", Pattern)
-		keyboard.InfiniteRainbow()
+		if Pattern != "" {
+			if Pattern == "rainbow" {
+				fmt.Printf("running pattern %v\n", Pattern)
+				keyboard.InfiniteRainbow()
+			}
+			if Pattern == "pulse" {
+				fmt.Printf("running pattern %v\n", Pattern)
+				keyboard.BrightnessPulse()
+			}
+		} else {
+			cmd.Help()
+		}
 	},
 }
