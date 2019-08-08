@@ -22,6 +22,7 @@ var presetColors = map[string]RGBColor{
 	"blue":   RGBColor{0, 0, 255},
 	"pink":   RGBColor{255, 105, 180},
 	"purple": RGBColor{128, 0, 128},
+	"white":  RGBColor{0, 0, 0},
 }
 
 var colorFiles = []string{"color_center", "color_left", "color_right", "color_extra"}
