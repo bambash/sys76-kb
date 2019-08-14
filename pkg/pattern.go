@@ -1,9 +1,6 @@
 package keyboard
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"strconv"
 	"time"
 )
@@ -14,32 +11,18 @@ func BrightnessPulse() {
 		for i := 255; i >= 0; i-- {
 			s := strconv.Itoa(i)
 			BrightnessFileHandler(s)
-			time.Sleep(10 * time.Millisecond)
+			time.Sleep(25 * time.Millisecond)
 		}
-		for i := 0; i <= 255; i++ {
+		for i := 1; i <= 255; i++ {
 			s := strconv.Itoa(i)
 			BrightnessFileHandler(s)
-			time.Sleep(10 * time.Millisecond)
+			time.Sleep(25 * time.Millisecond)
 		}
 	}
 }
 
 // InfiniteRainbow generates... an infinite rainbow
 func InfiniteRainbow() {
-	open := func(files []string) []*os.File {
-		kbfiles := make([]*os.File, 0, len(files))
-		for _, file := range files {
-			p := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", file)
-			fh, err := os.OpenFile(p, os.O_RDWR, 0755)
-			if err != nil {
-				log.Fatal("error: %v", err)
-				continue
-			}
-			kbfiles = append(kbfiles, fh)
-		}
-		return kbfiles
-	}
-
 	colors := make([]string, 0, 6)
 	// generate range of rainbow values
 	for i := 0; i <= 255; i++ {
@@ -72,12 +55,9 @@ func InfiniteRainbow() {
 		colors = append(colors, c.GetColorInHex())
 	}
 
-	kbfiles := open(colorFiles)
 	for {
 		for _, c := range colors {
-			for _, f := range kbfiles {
-				f.WriteString(c)
-			}
+			ColorFileHandler(c)
 			time.Sleep(time.Nanosecond)
 		}
 	}

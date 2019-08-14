@@ -42,7 +42,7 @@ func (c RGBColor) GetColorInHex() string {
 	return hex
 }
 
-// ColorFileHandler writes a hex value to "f" input, and returns the bytes written
+// ColorFileHandler writes a string to colorFiles
 func ColorFileHandler(c string) {
 	_, exists := presetColors[c]
 	if exists {
@@ -52,14 +52,23 @@ func ColorFileHandler(c string) {
 			p := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", file)
 			fh, err := os.OpenFile(p, os.O_RDWR, 0755)
 			if err != nil {
-				log.Fatal("error: %v", err)
+				log.Fatal(err)
 				os.Exit(1)
 			}
 			fh.WriteString(color)
 			fh.Close()
 		}
 	} else {
-		os.Exit(1)
+		for _, file := range colorFiles {
+			p := fmt.Sprintf("/sys/class/leds/system76::kbd_backlight/%v", file)
+			fh, err := os.OpenFile(p, os.O_RDWR, 0755)
+			if err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
+			fh.WriteString(c)
+			fh.Close()
+		}
 	}
 }
 
