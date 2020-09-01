@@ -1,5 +1,5 @@
 # sys76-kb
-This is app is still a work-in-progress. The goal is to create a robust tool for managing the RGB keyboard on System76 laptops. The only method System76 provides for changing the colors and brightness of the keyboard is via built-in keys. This app aims to give users greater control over the keyboard.
+This is cli is still a work-in-progress. The goal is to create a robust tool for managing the RGB keyboard on System76 laptops. The only built-in method System76 provides for changing the colors and brightness of the keyboard is via built-in keys. This cli aims to give users greater control over the keyboard.
 
 Only tested on the Darter, but it should work on other System76 models.
 
@@ -30,8 +30,3 @@ $ sudo sys76-kb run -p pulse &
 ![alt text][loop]
 
 [loop]: https://github.com/bambash/sys76-kb/blob/master/kb.gif "loop"
-
-### future plans
-- more cli functionality
-- custom hex values
-- pre-built RGB patterns
