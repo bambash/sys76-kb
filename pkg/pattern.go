@@ -6,23 +6,31 @@ import (
 )
 
 // BrightnessPulse continuously dials up and down brightness
-func BrightnessPulse() {
+func BrightnessPulse(delay time.Duration) {
+	if delay == 0 {
+		delay = 25 * time.Millisecond
+	}
+
 	for {
 		for i := 255; i >= 0; i-- {
 			s := strconv.Itoa(i)
 			BrightnessFileHandler(s)
-			time.Sleep(25 * time.Millisecond)
+			time.Sleep(delay)
 		}
 		for i := 1; i <= 255; i++ {
 			s := strconv.Itoa(i)
 			BrightnessFileHandler(s)
-			time.Sleep(25 * time.Millisecond)
+			time.Sleep(delay)
 		}
 	}
 }
 
 // InfiniteRainbow generates... an infinite rainbow
-func InfiniteRainbow() {
+func InfiniteRainbow(delay time.Duration) {
+	if delay == 0 {
+		delay = time.Nanosecond
+	}
+
 	colors := make([]string, 0, 6)
 	// generate range of rainbow values
 	for i := 0; i <= 255; i++ {
@@ -58,7 +66,7 @@ func InfiniteRainbow() {
 	for {
 		for _, c := range colors {
 			ColorFileHandler(c)
-			time.Sleep(time.Nanosecond)
+			time.Sleep(delay)
 		}
 	}
 }
