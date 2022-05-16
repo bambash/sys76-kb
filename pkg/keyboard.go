@@ -34,12 +34,17 @@ type SysPath struct {
 	Files [8]string
 }
 
+var foundSysPath *SysPath
+
 // GetColorInHex returns a color in HEX format
 func (c RGBColor) GetColorInHex() string {
 	return fmt.Sprintf("%02X%02X%02X", c.Red, c.Green, c.Blue)
 }
 
 func getSysPath() SysPath {
+	if foundSysPath != nil {
+		return *foundSysPath
+	}
 	ret := SysPath{"", [8]string{}}
 	for _, sub := range ledClass {
 		d := fmt.Sprintf(sysFSPath, sub)
@@ -56,6 +61,7 @@ func getSysPath() SysPath {
 			i += 1
 		}
 	}
+	foundSysPath = &ret
 	return ret
 }
 
